@@ -27,6 +27,9 @@ index = pc.Index(index_name)
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large",api_key=os.environ.get("OPENAI_API_KEY"))
 vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
+print("Key loaded:", os.environ.get("OPENAI_API_KEY")[:10])
+
+
 # initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
