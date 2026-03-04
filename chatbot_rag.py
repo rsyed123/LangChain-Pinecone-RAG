@@ -16,6 +16,19 @@ load_dotenv()
 
 st.title("Chatbot")
 
+# ── Authentication ────────────────────────────────────────────────────────────
+if not st.experimental_user.is_logged_in:
+    st.info("Please sign in to use the chatbot.")
+    if st.button("Sign in with Google"):
+        st.login("google")
+    st.stop()
+
+with st.sidebar:
+    st.write(f"Signed in as **{st.experimental_user.email}**")
+    if st.button("Sign out"):
+        st.logout()
+# ─────────────────────────────────────────────────────────────────────────────
+
 # initialize pinecone database
 pc = Pinecone(api_key=os.environ.get("PINECONE_API_KEY"))
 
