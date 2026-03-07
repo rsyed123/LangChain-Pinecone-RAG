@@ -1,6 +1,9 @@
+import FlowerBackground from './FlowerBackground'
+
 function Login({ apiUrl }) {
   return (
     <div className="login-container">
+      <FlowerBackground />
       <div className="login-card">
         <h1>Chatbot</h1>
         <p>Sign in to start chatting</p>

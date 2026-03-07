@@ -17,6 +17,27 @@ body {
   flex-direction: column;
 }
 
+/* ── Flowers ─────────────────────────────────────── */
+.flower-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.flower {
+  position: absolute;
+  user-select: none;
+  animation: floatFlower linear infinite;
+}
+
+@keyframes floatFlower {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-18px) rotate(12deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
 /* ── Loading ─────────────────────────────────────── */
 .loading {
   display: flex;
@@ -37,6 +58,8 @@ body {
 }
 
 .login-card {
+  position: relative;
+  z-index: 1;
   background: white;
   padding: 2.5rem 2rem;
   border-radius: 16px;
@@ -90,6 +113,8 @@ body {
 }
 
 .chat-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -141,6 +166,8 @@ body {
 
 /* ── Messages ────────────────────────────────────── */
 .messages {
+  position: relative;
+  z-index: 1;
   flex: 1;
   overflow-y: auto;
   padding: 1.5rem 1.5rem 1rem;
@@ -200,6 +227,8 @@ body {
 
 /* ── Input ───────────────────────────────────────── */
 .input-area {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-end;
   gap: 0.6rem;

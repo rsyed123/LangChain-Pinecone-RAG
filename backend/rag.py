@@ -26,11 +26,15 @@ def get_rag_response(messages: list[dict]) -> str:
         search_kwargs={"k": 3, "score_threshold": 0.5},
     )
     docs = retriever.invoke(user_message)
+
+    if not docs:
+        return "I don't know."
+
     docs_text = "".join(d.page_content for d in docs)
 
     system_prompt = f"""You are an assistant for question-answering tasks.
-Use the following pieces of retrieved context to answer the question.
-If you don't know the answer, just say that you don't know.
+Answer ONLY using the context provided below. Do not use any outside knowledge.
+If the context does not contain enough information to answer, say "I don't know."
 Use three sentences maximum and keep the answer concise.
 Context: {docs_text}"""
 

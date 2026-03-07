@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import FlowerBackground from './FlowerBackground'
 
 function Chat({ user, onLogout, apiUrl }) {
   const [messages, setMessages] = useState([])
@@ -45,6 +46,7 @@ function Chat({ user, onLogout, apiUrl }) {
 
   return (
     <div className="chat-container">
+      <FlowerBackground />
       <header className="chat-header">
         <h1>Chatbot</h1>
         <div className="user-info">
