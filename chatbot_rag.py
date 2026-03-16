@@ -47,8 +47,6 @@ print("Key loaded:", os.environ.get("OPENAI_API_KEY")[:10])
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-    st.session_state.messages.append(SystemMessage("You are an assistant for question-answering tasks. "))
-
 # display chat messages from history on app rerun
 for message in st.session_state.messages:
     if isinstance(message, HumanMessage):
@@ -70,12 +68,6 @@ if prompt:
 
         st.session_state.messages.append(HumanMessage(prompt))
 
-    # initialize the llm
-    llm = ChatOpenAI(
-        model="gpt-4o",
-        temperature=1
-    )
-
     # creating and invoking the retriever
     retriever = vector_store.as_retriever(
         search_type="similarity_score_threshold",
@@ -83,27 +75,29 @@ if prompt:
     )
 
     docs = retriever.invoke(prompt)
-    docs_text = "".join(d.page_content for d in docs)
 
-    # creating the system prompt
-    system_prompt = """You are an assistant for question-answering tasks. 
-    Use the following pieces of retrieved context to answer the question. 
-    If you don't know the answer, just say that you don't know. 
-    Use three sentences maximum and keep the answer concise.
-    Context: {context}:"""
+    if not docs:
+        result = "I don't know."
+    else:
+        docs_text = "".join(d.page_content for d in docs)
 
-    # Populate the system prompt with the retrieved context
-    system_prompt_fmt = system_prompt.format(context=docs_text)
+        # creating the system prompt
+        system_prompt = """You are a question-answering assistant.
+Answer the question using ONLY the context provided below. Do not use any outside knowledge.
+If the context does not contain the answer, say "I don't know." Do not guess or make up information.
+Use three sentences maximum and keep the answer concise.
+Context: {context}"""
 
+        system_prompt_fmt = system_prompt.format(context=docs_text)
 
-    print("-- SYS PROMPT --")
-    print(system_prompt_fmt)
+        print("-- SYS PROMPT --")
+        print(system_prompt_fmt)
 
-    # adding the system prompt to the message history
-    st.session_state.messages.append(SystemMessage(system_prompt_fmt))
+        # initialize the llm
+        llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
-    # invoking the llm
-    result = llm.invoke(st.session_state.messages).content
+        # invoking the llm with system prompt prepended fresh each turn
+        result = llm.invoke([SystemMessage(system_prompt_fmt)] + st.session_state.messages).content
 
     # adding the response from the llm to the screen (and chat)
     with st.chat_message("assistant"):
